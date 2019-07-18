@@ -1,0 +1,7 @@
+Toyota Aygo;100;1months
+Audi A4;10000;year
+Peugeot 508;800;4months
+Toyota Corolla;400;4months
+Honda Accord;100;1month
+Ford Mustang;500;2months
+Hyundai Elantra;400;6months
