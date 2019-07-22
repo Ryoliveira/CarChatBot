@@ -3,9 +3,9 @@ package ch.app.account;
 import java.util.List;
 import java.util.Scanner;
 
-import ch.chat.file.UserInfoRepository;
-import ch.chat.file.UserInfoSerRepository;
-import ch.chat.models.User;
+import ch.app.file.UserInfoRepository;
+import ch.app.file.UserInfoSerRepository;
+import ch.app.models.User;
 
 
 public class AccountAccessManager {

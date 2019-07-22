@@ -1,8 +1,8 @@
-package ch.chat.file;
+package ch.app.file;
 
 import java.util.List;
 
-import ch.chat.models.CarInfo;
+import ch.app.models.CarInfo;
 
 public interface InventoryRepository {
 	void save(List<CarInfo> cars);

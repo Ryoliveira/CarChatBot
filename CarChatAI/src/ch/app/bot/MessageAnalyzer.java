@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
-import ch.chat.file.WordRepository;
-import ch.chat.file.WordXlsRepository;
+import ch.app.file.WordRepository;
+import ch.app.file.WordXlsRepository;
 
 
 

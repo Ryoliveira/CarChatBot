@@ -1,4 +1,4 @@
-package ch.chat.file;
+package ch.app.file;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,7 +11,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ch.chat.models.Appointment;
+import ch.app.models.Appointment;
 
 public class AppointmentJsonRepository implements AppointmentRepository {
 

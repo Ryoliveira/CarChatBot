@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
-import ch.chat.file.AppointmentJsonRepository;
-import ch.chat.file.AppointmentRepository;
-import ch.chat.file.CarInventoryRepository;
-import ch.chat.file.InventoryRepository;
-import ch.chat.models.Appointment;
-import ch.chat.models.CarInfo;
+import ch.app.file.AppointmentJsonRepository;
+import ch.app.file.AppointmentRepository;
+import ch.app.file.CarInventoryRepository;
+import ch.app.file.InventoryRepository;
+import ch.app.models.Appointment;
+import ch.app.models.CarInfo;
 
 public class AppointmentManager {
 	private Scanner input = new Scanner(System.in);

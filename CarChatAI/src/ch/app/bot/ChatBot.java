@@ -3,7 +3,7 @@ package ch.app.bot;
 import java.util.Scanner;
 
 import ch.app.account.AccountAccessManager;
-import ch.chat.models.User;
+import ch.app.models.User;
 
 public class ChatBot {
 	final private Scanner input = new Scanner(System.in);

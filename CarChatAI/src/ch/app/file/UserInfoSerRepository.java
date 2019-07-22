@@ -1,10 +1,10 @@
-package ch.chat.file;
+package ch.app.file;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.chat.models.User;
+import ch.app.models.User;
 
 public class UserInfoSerRepository implements UserInfoRepository {
 	final private String FILE_NAME = "./Users.ser";

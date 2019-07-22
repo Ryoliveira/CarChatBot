@@ -1,4 +1,4 @@
-package ch.chat.models;
+package ch.app.models;
 
 import java.util.UUID;
 

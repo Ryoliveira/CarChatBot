@@ -1,4 +1,4 @@
-package ch.chat.file;
+package ch.app.file;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.chat.models.CarInfo;
+import ch.app.models.CarInfo;
 
 public class CarInventoryRepository implements InventoryRepository{
 	

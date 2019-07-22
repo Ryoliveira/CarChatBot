@@ -1,9 +1,9 @@
-package ch.chat.file;
+package ch.app.file;
 
 import java.util.List;
 import java.util.UUID;
 
-import ch.chat.models.Appointment;
+import ch.app.models.Appointment;
 
 public interface AppointmentRepository {
 	void save(Appointment app);
