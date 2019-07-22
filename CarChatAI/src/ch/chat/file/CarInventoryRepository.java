@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.chat.car.CarInfo;
+import ch.chat.models.CarInfo;
 
 public class CarInventoryRepository implements InventoryRepository{
 	

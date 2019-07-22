@@ -1,4 +1,4 @@
-package ch.chat.user;
+package ch.chat.models;
 
 import java.io.Serializable;
 import java.util.UUID;

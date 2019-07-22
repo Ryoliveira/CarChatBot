@@ -1,6 +1,4 @@
-package ch.chat.app;
-
-import ch.chat.ai.ChatBot;
+package ch.app.bot;
 
 public class Main {
 	

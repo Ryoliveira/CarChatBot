@@ -1,11 +1,9 @@
-package ch.chat.appointment;
+package ch.chat.models;
 
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import ch.chat.car.CarInfo;
 
 public class Appointment {
 	String date;

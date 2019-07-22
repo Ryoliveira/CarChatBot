@@ -1,7 +1,8 @@
 package ch.chat.file;
 
 import java.util.List;
-import ch.chat.user.User;
+
+import ch.chat.models.User;
 
 public interface UserInfoRepository {
 	void save(List<User> users);

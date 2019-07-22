@@ -1,4 +1,4 @@
-package ch.chat.appointment;
+package ch.app.bot;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -9,34 +9,39 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
-import ch.chat.car.CarInfo;
 import ch.chat.file.AppointmentJsonRepository;
 import ch.chat.file.AppointmentRepository;
 import ch.chat.file.CarInventoryRepository;
 import ch.chat.file.InventoryRepository;
-import ch.chat.message.MessageAnalyzer;
+import ch.chat.models.Appointment;
+import ch.chat.models.CarInfo;
 
 public class AppointmentManager {
-	private static Scanner input = new Scanner(System.in);
-	private static List<Appointment> appointmentList;
+	private Scanner input = new Scanner(System.in);
+	private List<Appointment> appointmentList;
 
+	private MessageAnalyzer msgAnalyzer;
 	private String day;
 	private String time;
 	private CarInfo car;
+
+	public AppointmentManager() {
+		msgAnalyzer = new MessageAnalyzer();
+	}
 
 	/**
 	 * Get users car budget
 	 * 
 	 * @return budget users car budget
 	 */
-	public int getBudget() {
+	private int getBudget() {
 		// get budget for car rental
 		boolean valid = false;
 		int budget = 0;
 		while (!valid) {
 			System.out.print("Enter rental budget: ");
 			try {
-				budget = Integer.parseInt(MessageAnalyzer.checkForInsult(input.nextLine()));
+				budget = Integer.parseInt(msgAnalyzer.checkForInsult(input.nextLine()));
 				valid = true;
 			} catch (InputMismatchException | NumberFormatException e) {
 				System.out.println("Please enter a valid number.");
@@ -50,7 +55,7 @@ public class AppointmentManager {
 	 * 
 	 * @return carsAvailable cars within users budget
 	 */
-	public List<CarInfo> getCarsInBudget() {
+	private List<CarInfo> getCarsInBudget() {
 		// display cars within users budget
 		InventoryRepository carRepo = new CarInventoryRepository();
 		List<CarInfo> carsAvailable = new ArrayList<>();
@@ -70,7 +75,7 @@ public class AppointmentManager {
 	 * 
 	 * @return availableDays list of availableDays
 	 */
-	public List<String> getAppointmentsDays() {
+	private List<String> getAppointmentsDays() {
 		List<String> availableDays = new ArrayList<>();
 		int twoWeeks = 14;
 		Date date = new Date();
@@ -97,7 +102,7 @@ public class AppointmentManager {
 	 * 
 	 * @return openTimes List of open time slots
 	 */
-	public List<String> getAvailableTimes() {
+	private List<String> getAvailableTimes() {
 		List<String> openTimes = new ArrayList<>();
 		List<String> nonVacantTimes = getNonVacantTimeSlots(day);
 		String meridiem = "am";
@@ -127,7 +132,7 @@ public class AppointmentManager {
 	 * @param date Specific date to look up time slots
 	 * @return nonVacantTimes List of non vacant time slots
 	 */
-	public List<String> getNonVacantTimeSlots(String date) {
+	private List<String> getNonVacantTimeSlots(String date) {
 		List<String> nonVacantTimes = new ArrayList<>();
 		for (Appointment app : appointmentList) {
 			if (app.getDate().equals(date)) {
@@ -142,7 +147,7 @@ public class AppointmentManager {
 	 * 
 	 * @param cars List of cars to display
 	 */
-	public void displayCarsInBudget(List<CarInfo> cars) {
+	private void displayCarsInBudget(List<CarInfo> cars) {
 		System.out.println("#\tMake\tModel\tPrice\tLength");
 		System.out.println("--------------------------------");
 		int i = 1;
@@ -156,7 +161,7 @@ public class AppointmentManager {
 	 * 
 	 * @param availableDays List of days with open time slots
 	 */
-	public void displayAvailableDays(List<String> availableDays) {
+	private void displayAvailableDays(List<String> availableDays) {
 		int choice = 1;
 		System.out.println("Available days in the next two weeks");
 		for (String day : availableDays) {
@@ -169,7 +174,7 @@ public class AppointmentManager {
 	 * 
 	 * @param availableTimes List of open time slots
 	 */
-	public void displayAvailableTimes(List<String> availableTimes) {
+	private void displayAvailableTimes(List<String> availableTimes) {
 		int i = 1;
 		System.out.println("Available appointment hours");
 		for (String time : availableTimes) {
@@ -182,7 +187,7 @@ public class AppointmentManager {
 	 * 
 	 * @return car selected CarInfo object
 	 */
-	public CarInfo selectCar() {
+	private CarInfo selectCar() {
 		boolean valid = false;
 		CarInfo car = null;
 		List<CarInfo> cars = getCarsInBudget();
@@ -190,7 +195,7 @@ public class AppointmentManager {
 		System.out.println("Please select a car from the list.");
 		while (!valid) {
 			try {
-				int selection = Integer.parseInt(MessageAnalyzer.checkForInsult(input.nextLine()));
+				int selection = Integer.parseInt(msgAnalyzer.checkForInsult(input.nextLine()));
 				car = cars.get(selection - 1);
 				valid = true;
 			} catch (InputMismatchException | IndexOutOfBoundsException | NumberFormatException e) {
@@ -205,7 +210,7 @@ public class AppointmentManager {
 	 * 
 	 * @return chosenDay Day of appointment
 	 */
-	public String selectDay() {
+	private String selectDay() {
 		boolean valid = false;
 		int userChoice = 0;
 		String chosenDay = null;
@@ -214,7 +219,7 @@ public class AppointmentManager {
 		System.out.println("Which day would work for you?");
 		while (!valid) {
 			try {
-				userChoice = Integer.parseInt(MessageAnalyzer.checkForInsult(input.nextLine()));
+				userChoice = Integer.parseInt(msgAnalyzer.checkForInsult(input.nextLine()));
 				chosenDay = availableDays.get(userChoice - 1);
 				valid = true;
 			} catch (InputMismatchException | IndexOutOfBoundsException | NumberFormatException e) {
@@ -229,16 +234,16 @@ public class AppointmentManager {
 	 * 
 	 * @return selectedTime User selected time of appointment
 	 */
-	public String selectTime() {
+	private String selectTime() {
 		String selectedTime = null;
 		boolean valid = false;
 		List<String> openTimes = getAvailableTimes();
 		displayAvailableTimes(openTimes);
 		System.out.println("Please select a time listed.");
-		
+
 		while (!valid) {
 			try {
-				int userChoice = Integer.parseInt(MessageAnalyzer.checkForInsult(input.nextLine()));
+				int userChoice = Integer.parseInt(msgAnalyzer.checkForInsult(input.nextLine()));
 				selectedTime = openTimes.get(userChoice - 1);
 				valid = true;
 			} catch (InputMismatchException | IndexOutOfBoundsException | NumberFormatException e) {
@@ -253,7 +258,7 @@ public class AppointmentManager {
 	 * 
 	 * @param userID Unique user ID
 	 */
-	public void appointmentSetup(UUID userID) {
+	public void setUpAppointment(UUID userID) {
 		AppointmentRepository appRepo = new AppointmentJsonRepository();
 		appointmentList = appRepo.loadAppointments();
 		car = selectCar();

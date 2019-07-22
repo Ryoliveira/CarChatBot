@@ -2,7 +2,7 @@ package ch.chat.file;
 
 import java.util.List;
 
-import ch.chat.car.CarInfo;
+import ch.chat.models.CarInfo;
 
 public interface InventoryRepository {
 	void save(List<CarInfo> cars);

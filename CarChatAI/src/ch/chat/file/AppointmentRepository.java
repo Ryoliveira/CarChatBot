@@ -3,7 +3,7 @@ package ch.chat.file;
 import java.util.List;
 import java.util.UUID;
 
-import ch.chat.appointment.Appointment;
+import ch.chat.models.Appointment;
 
 public interface AppointmentRepository {
 	void save(Appointment app);

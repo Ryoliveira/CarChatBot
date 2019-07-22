@@ -1,4 +1,4 @@
-package ch.chat.account;
+package ch.app.account;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -6,23 +6,23 @@ import java.util.Scanner;
 
 import ch.chat.file.UserInfoRepository;
 import ch.chat.file.UserInfoSerRepository;
-import ch.chat.pass.PassManager;
-import ch.chat.user.User;
+import ch.chat.models.User;
 
 public class InfoRecorder {
-	final Scanner input = new Scanner(System.in);
+	final private Scanner input = new Scanner(System.in);
 
 	/**
 	 * Record basic user info and return new profile
 	 * 
 	 * @return newUser created profile
 	 */
-	public User getUserInfo() {
-		String username = getUsername();
-		String firstName = getName("first");
-		String lastName = getName("last");
-		String age = getAge();
-		String password = PassManager.createPassword();
+	public User recordUserInfo() {
+		PassManager pwManager = new PassManager();
+		String username = recordUsername();
+		String firstName = recordName("first");
+		String lastName = recordName("last");
+		String age = recordAge();
+		String password = pwManager.createPassword();
 		User newUser = new User(firstName, lastName, password, age, username);
 		return newUser;
 	}
@@ -32,7 +32,7 @@ public class InfoRecorder {
 	 * 
 	 * @return username User created username
 	 */
-	public String getUsername() {
+	private String recordUsername() {
 		// TODO Create username pattern
 		String usernamePat = "^(?=.{8,20}$)[a-zA-Z0-9._]+$";
 		UserInfoRepository userRepo = new UserInfoSerRepository();
@@ -63,12 +63,12 @@ public class InfoRecorder {
 	}
 
 	/**
-	 * Get users name
+	 * Record users name
 	 * 
 	 * @param firstLast First or Last String
 	 * @return name Users name
 	 */
-	public String getName(String firstLast) {
+	private String recordName(String firstLast) {
 		String name = null;
 		while (name == null) {
 			System.out.print("Please enter " + firstLast + " name: ");
@@ -82,11 +82,11 @@ public class InfoRecorder {
 	}
 
 	/**
-	 * Get users age
+	 * Record users age
 	 * 
 	 * @return age Users age as String
 	 */
-	public String getAge() {
+	private String recordAge() {
 		int age = 0;
 		while (age == 0) {
 			System.out.print("Please enter age: ");

@@ -11,7 +11,7 @@ import java.util.UUID;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ch.chat.appointment.Appointment;
+import ch.chat.models.Appointment;
 
 public class AppointmentJsonRepository implements AppointmentRepository {
 
