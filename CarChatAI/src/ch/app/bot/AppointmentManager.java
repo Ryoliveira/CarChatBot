@@ -19,14 +19,32 @@ import ch.app.models.CarInfo;
 public class AppointmentManager {
 	private Scanner input = new Scanner(System.in);
 	private List<Appointment> appointmentList;
-
+	private AppointmentRepository appRepo;
 	private MessageAnalyzer msgAnalyzer;
+	private UUID userID;
 	private String day;
 	private String time;
 	private CarInfo car;
 
-	public AppointmentManager() {
+	public AppointmentManager(UUID userID) {
+		appRepo = new AppointmentJsonRepository();
+		appointmentList = appRepo.loadAppointments();
 		msgAnalyzer = new MessageAnalyzer();
+		this.userID = userID;
+	}
+
+	private void displayUserAppointments() {
+		List<Appointment> userApps = getUserAppointments();
+		int i = 1;
+		for (Appointment app : userApps) {
+			System.out.println(i++ + ")");
+			System.out.println(app);
+			System.out.println();
+		}
+	}
+
+	private List<Appointment> getUserAppointments() {
+		return appRepo.load(userID);
 	}
 
 	/**
@@ -258,9 +276,7 @@ public class AppointmentManager {
 	 * 
 	 * @param userID Unique user ID
 	 */
-	public void setUpAppointment(UUID userID) {
-		AppointmentRepository appRepo = new AppointmentJsonRepository();
-		appointmentList = appRepo.loadAppointments();
+	public void setUpAppointment() {
 		car = selectCar();
 		day = selectDay();
 		time = selectTime();
@@ -268,6 +284,55 @@ public class AppointmentManager {
 		appRepo.save(newApp);
 		System.out.println("Appointment Created!");
 		System.out.println(newApp);
+	}
+
+	public void modifyAppointment() {
+		System.out.println("1)Edit Appointment" + "\n2)Remove Appointment" + "\n3)Cancel");
+		System.out.print("Enter a selection: ");
+		try {
+			int userChoice = Integer.parseInt(input.nextLine());
+			if (userChoice == 1) {
+				editAppointment();
+			} else if (userChoice == 2) {
+				removeAppointment();
+			} else if (userChoice == 3) {
+				return;
+			} else {
+				throw new ArrayIndexOutOfBoundsException();
+			}
+		} catch (ArrayIndexOutOfBoundsException | InputMismatchException e) {
+			System.out.println("Enter a number between 1-3");
+			modifyAppointment();
+		}
+	}
+
+	private void editAppointment() {
+		List<Appointment> userApps = getUserAppointments();
+		displayUserAppointments();
+		System.out.println("About to edit");
+	}
+
+	private void removeAppointment() {
+		int userChoice = -1;
+		boolean deleted = false;
+		List<Appointment> userApps = getUserAppointments();
+		while (!deleted) {
+			displayUserAppointments();
+			System.out.println("Select appointment to delete");
+			try {
+				userChoice = Integer.parseInt(input.nextLine());
+			} catch (InputMismatchException | ArrayIndexOutOfBoundsException e) {
+				System.out.println("Please enter a number between 1-" + userApps.size());
+				continue;
+			}
+			System.out.println("Are you sure you want to delete?(Y/N)");
+			String choice = input.nextLine();
+			if (choice.equalsIgnoreCase("Y")) {
+				appRepo.remove(userID, userChoice-1);
+				System.out.println("Appointment deleted.");
+				deleted = true;
+			}
+		}
 	}
 
 }

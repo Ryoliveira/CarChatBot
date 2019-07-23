@@ -1,8 +1,13 @@
 package ch.app.bot;
 
+import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 import ch.app.account.AccountAccessManager;
+import ch.app.file.AppointmentJsonRepository;
+import ch.app.file.AppointmentRepository;
+import ch.app.models.Appointment;
 import ch.app.models.User;
 
 public class ChatBot {
@@ -49,13 +54,14 @@ public class ChatBot {
 	 * @param name name of user
 	 */
 	private void greeting(String name) {
-		System.out.println("Greetings " + name + ", welcome to vehicle help live chat." + "\nHow may I assist you?");
+		System.out.println("Greetings " + name + ", welcome to vehicle help live chat.");
 	}
 
 	/**
 	 * Detect chat topic from user
 	 */
 	private void getChatTopic() {
+		System.out.println("How may I assist you?");
 		String message = msgAnalyzer.checkForInsult(input.nextLine());
 		String situation = msgAnalyzer.detectSituation(message);
 		if (situation.equals("trouble")) {
@@ -63,7 +69,15 @@ public class ChatBot {
 		} else if (situation.equals("rental")) {
 			rentalSituation();
 		} else {
-			System.out.println("No problems? I gotta go then!");
+			System.out.println("No problems?");
+		}
+		System.out.println("Is there anything else I can help you with? (Y/N)");
+		message = msgAnalyzer.checkForInsult(input.nextLine());
+		if(message.equalsIgnoreCase("Y")) {
+			getChatTopic();
+		}else {
+			System.out.println("Good-Bye!");
+			System.out.println("You have been disconnected from chat.");
 		}
 	}
 
@@ -94,11 +108,20 @@ public class ChatBot {
 	 * Detect if user wants to make an appointment
 	 */
 	private void rentalSituation() {
-		AppointmentManager appManager = new AppointmentManager();
+		UUID userID = userProfile.getId();
+		AppointmentRepository appRepo = new AppointmentJsonRepository();
+		List<Appointment> userApps = appRepo.load(userID);
+		AppointmentManager appManager = new AppointmentManager(userID);
 		System.out.println("Would you like to set up an appointment?");
 		String userMessage = msgAnalyzer.checkForInsult(input.nextLine());
 		if (msgAnalyzer.detectConfirmation(userMessage)) {
-			appManager.setUpAppointment(userProfile.getId());
+			appManager.setUpAppointment();
+		}else if(userApps.size() > 0){
+			System.out.println("Would you like to view/Edit existing appointment?");
+			userMessage = msgAnalyzer.checkForInsult(input.nextLine());
+			if(msgAnalyzer.detectConfirmation(userMessage)) {
+				appManager.modifyAppointment();
+			}
 		}
 
 	}

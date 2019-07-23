@@ -49,7 +49,6 @@ public class UserInfoSerRepository implements UserInfoRepository {
 		} catch (IOException | ClassNotFoundException e) {
 			e.getMessage();
 		}
-		
 		return userList;
 	}
 	

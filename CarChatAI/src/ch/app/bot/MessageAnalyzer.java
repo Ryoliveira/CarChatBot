@@ -15,7 +15,7 @@ public class MessageAnalyzer {
 	final private Scanner input = new Scanner(System.in);
 	final private List<String> confirmKW = Arrays.asList("yes", "yup", "ok", "fine", "okay", "yeah", "yea");
 	final private List<String> troubleKW = Arrays.asList("broken", "broke", "down", "trouble", "wont");
-	final private  List<String> rentalKW =  Arrays.asList("shop", "repaired", "rental", "rent");
+	final private  List<String> rentalKW =  Arrays.asList("shop", "repaired", "rental", "rent", "appointment");
 	
 	private enum Severity{
 		MILD, MODERATE, SEVERE

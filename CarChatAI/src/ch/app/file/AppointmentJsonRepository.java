@@ -67,30 +67,19 @@ public class AppointmentJsonRepository implements AppointmentRepository {
 	}
 
 	/**
-	 *
-	 */
-	@Override
-	public void update(List<Appointment> apps) {
-		// TODO Update specific user appointments
-
-	}
-
-
-	/**
 	 * @return appointments List of appointments across all users
 	 */
 	@Override
 	public List<Appointment> loadAppointments() {
 		HashMap<UUID, List<Appointment>> profiles = getProfiles();
 		List<Appointment> appointments = new LinkedList<>();
-		for(Map.Entry<UUID, List<Appointment>> profile : profiles.entrySet()) {
-			for(Appointment app : profile.getValue()) {
+		for (Map.Entry<UUID, List<Appointment>> profile : profiles.entrySet()) {
+			for (Appointment app : profile.getValue()) {
 				appointments.add(app);
 			}
 		}
 		return appointments;
 	}
-	
 
 	/**
 	 * @return profiles List of currently saved profiles
@@ -108,6 +97,24 @@ public class AppointmentJsonRepository implements AppointmentRepository {
 			}
 		}
 		return profiles;
+	}
+
+	@Override
+	public void remove(UUID userID, int index) {
+		// TODO Auto-generated method stub
+		File file = new File(FILE_NAME);
+		Map<UUID, List<Appointment>> profiles = new HashMap<>();
+		try {
+			if (file.exists()) {
+				profiles = getProfiles();
+				if (profiles.containsKey(userID)) {
+					profiles.get(userID).remove(index);
+				}
+			}
+			mapper.writeValue(file, profiles);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
