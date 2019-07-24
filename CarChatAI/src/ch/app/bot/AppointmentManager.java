@@ -33,6 +33,9 @@ public class AppointmentManager {
 		this.userID = userID;
 	}
 
+	/**
+	 * Displays current users appointments
+	 */
 	private void displayUserAppointments() {
 		List<Appointment> userApps = getUserAppointments();
 		int i = 1;
@@ -286,16 +289,22 @@ public class AppointmentManager {
 		System.out.println(newApp);
 	}
 
+	
+	/**
+	 * Let user choose to remove or edit an existing appointment
+	 */
 	public void modifyAppointment() {
-		System.out.println("1)Edit Appointment" + "\n2)Remove Appointment" + "\n3)Cancel");
+		System.out.println("1)View Appointment(s) \n2)Edit Appointment \n3)Remove Appointment \n4)Cancel");
 		System.out.print("Enter a selection: ");
 		try {
 			int userChoice = Integer.parseInt(input.nextLine());
 			if (userChoice == 1) {
-				editAppointment();
+				displayUserAppointments();
 			} else if (userChoice == 2) {
+				editAppointment();
+			}else if(userChoice == 3){
 				removeAppointment();
-			} else if (userChoice == 3) {
+			}else if (userChoice == 4) {
 				return;
 			} else {
 				throw new ArrayIndexOutOfBoundsException();
@@ -306,12 +315,68 @@ public class AppointmentManager {
 		}
 	}
 
+	/**
+	 * Let user choose which appointment to edit
+	 */
 	private void editAppointment() {
+		int userChoice = -1;
+		Appointment editedApp = null;
+		boolean finished = false;
 		List<Appointment> userApps = getUserAppointments();
-		displayUserAppointments();
-		System.out.println("About to edit");
+		while (!finished) {
+			displayUserAppointments();
+			System.out.println("Select appointment to edit");
+			try {
+				userChoice = Integer.parseInt(msgAnalyzer.checkForInsult(input.nextLine())) - 1;
+				editedApp = editFields(userApps.get(userChoice));
+			} catch (InputMismatchException |IndexOutOfBoundsException e) {
+				System.out.println("Please enter a number between 1-" + userApps.size());
+				continue;
+			}
+			System.out.println("Save Changes?(Y/N)");
+			String choice = input.nextLine();
+			if (choice.equalsIgnoreCase("Y")) {
+				appRepo.update(userID, userChoice, editedApp);
+				finished = true;
+			}
+		}
 	}
 
+	
+	/**
+	 * Let user choose which field to edit
+	 * 
+	 * @param app Appointment to edited
+	 * @return app edited Appointment
+	 */
+	private Appointment editFields(Appointment app) {
+		int userChoice = -1;
+		boolean finished = false;
+		while (!finished) {
+			System.out.println("Select one of the following "
+					+ "\n1)Date of appointment \n2)Time of appointment \n3)Car to view");
+			try {
+				userChoice = Integer.parseInt(msgAnalyzer.checkForInsult(input.nextLine()));
+				if(userChoice < 1 || userChoice > 3) throw new IndexOutOfBoundsException();
+			}catch (InputMismatchException | IndexOutOfBoundsException e) {
+				System.out.println("Please enter a number between 1-3");
+				continue;
+			}
+			if(userChoice == 1) app.setDate(selectDay());
+			else if(userChoice == 2) app.setTime(selectTime());
+			else if(userChoice == 3) app.setCarDetail(selectCar());
+			System.out.println("Change another field?(Y/N)");
+			if(!msgAnalyzer.checkForInsult(input.nextLine()).equalsIgnoreCase("Y")) {
+				finished = true;
+			}
+		}
+		return app;
+	}
+	
+	
+	/**
+	 * Let user choose which Appointment to remove
+	 */
 	private void removeAppointment() {
 		int userChoice = -1;
 		boolean deleted = false;
@@ -320,15 +385,14 @@ public class AppointmentManager {
 			displayUserAppointments();
 			System.out.println("Select appointment to delete");
 			try {
-				userChoice = Integer.parseInt(input.nextLine());
-			} catch (InputMismatchException | ArrayIndexOutOfBoundsException e) {
+				userChoice = Integer.parseInt(input.nextLine()) - 1;
+			} catch (InputMismatchException | IndexOutOfBoundsException e) {
 				System.out.println("Please enter a number between 1-" + userApps.size());
 				continue;
 			}
 			System.out.println("Are you sure you want to delete?(Y/N)");
-			String choice = input.nextLine();
-			if (choice.equalsIgnoreCase("Y")) {
-				appRepo.remove(userID, userChoice-1);
+			if (msgAnalyzer.checkForInsult(input.nextLine()).equalsIgnoreCase("Y")) {
+				appRepo.remove(userID, userChoice);
 				System.out.println("Appointment deleted.");
 				deleted = true;
 			}

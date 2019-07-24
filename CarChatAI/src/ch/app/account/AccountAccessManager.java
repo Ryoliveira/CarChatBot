@@ -42,15 +42,12 @@ public class AccountAccessManager {
 	 */
 	public User logIn() {
 		Boolean access = false;
-		Boolean correctPass = false;
 		while (!access) {
 			userProfile = findUser();
 			if (userProfile != null) {
-				while (!correctPass) {
-					correctPass = passwordMatch();
-					if (correctPass) {
-						access = true;
-					} else {
+				while (!access) {
+					access = passwordMatch();
+					if (!access) {
 						System.out.println("Password did not match. Try again.");
 					}
 				}
@@ -93,12 +90,7 @@ public class AccountAccessManager {
 	private boolean passwordMatch() {
 		PassManager pwManager = new PassManager();
 		System.out.print("Enter Password: ");
-		String pass = input.nextLine();
-		if (pwManager.validatePassword(pass, userProfile.getPassword())) {
-			return true;
-		} else {
-			return false;
-		}
+		return pwManager.validatePassword(input.nextLine(), userProfile.getPassword());
 
 	}
 

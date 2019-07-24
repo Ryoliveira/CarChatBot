@@ -117,4 +117,25 @@ public class AppointmentJsonRepository implements AppointmentRepository {
 		}
 	}
 
+	@Override
+	public void update(UUID userID, int index, Appointment app) {
+		// TODO Auto-generated method stub
+		File file = new File(FILE_NAME);
+		Map<UUID, List<Appointment>> profiles = new HashMap<>();
+		try {
+			if (file.exists()) {
+				profiles = getProfiles();
+				if (profiles.containsKey(userID)) {
+					profiles.get(userID).set(index, app);
+				}
+			}
+			mapper.writeValue(file, profiles);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+
 }
