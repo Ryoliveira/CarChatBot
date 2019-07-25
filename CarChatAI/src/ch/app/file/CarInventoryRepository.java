@@ -10,23 +10,22 @@ import java.util.List;
 
 import ch.app.models.CarInfo;
 
-public class CarInventoryRepository implements InventoryRepository{
-	
+public class CarInventoryRepository implements InventoryRepository {
+
 	String FILE_NAME = "./Cars.txt";
 
 	/**
 	 * Save list of cars
 	 * 
-	 *@param cars List of cars to be saved
+	 * @param cars List of cars to be saved
 	 */
 	@Override
-	public void save(List<CarInfo> cars){
+	public void save(List<CarInfo> cars) {
 		try {
 			FileWriter fw = new FileWriter(new File(FILE_NAME));
-			for(CarInfo car : cars) {
-				fw.write(car.getMake() + " " + car.getModel() + 
-						";" + car.getPrice() + 
-						";" + car.getLeaseLength() + "\n");
+			for (CarInfo car : cars) {
+				fw.write(car.getMake() + " " + car.getModel() + ";" + car.getPrice() + ";" + car.getLeaseLength()
+						+ "\n");
 			}
 			fw.close();
 		} catch (IOException e) {
@@ -46,7 +45,7 @@ public class CarInventoryRepository implements InventoryRepository{
 		try {
 			String line = "";
 			BufferedReader reader = new BufferedReader(new FileReader(file));
-			while((line = reader.readLine()) != null) {
+			while ((line = reader.readLine()) != null) {
 				String[] info = line.split(";");
 				String[] makeModel = info[0].split(" ");
 				CarInfo newCar = new CarInfo(makeModel[0], makeModel[1], info[1], info[2]);
@@ -59,6 +58,5 @@ public class CarInventoryRepository implements InventoryRepository{
 		}
 		return carInventory;
 	}
-	
 
 }

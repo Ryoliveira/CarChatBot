@@ -1,8 +1,7 @@
 package ch.app.bot;
 
 public class Main {
-	
-	
+
 	/**
 	 * Start chat bot
 	 * 

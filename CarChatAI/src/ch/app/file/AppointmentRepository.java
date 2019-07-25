@@ -7,8 +7,12 @@ import ch.app.models.Appointment;
 
 public interface AppointmentRepository {
 	void save(Appointment app);
+
 	void update(UUID userID, int index, Appointment app);
+
 	void remove(UUID userId, int index);
-	List<Appointment>load(UUID creatorId);
+
+	List<Appointment> load(UUID creatorId);
+
 	List<Appointment> loadAppointments();
 }

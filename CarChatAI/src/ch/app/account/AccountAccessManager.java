@@ -7,7 +7,6 @@ import ch.app.file.UserInfoRepository;
 import ch.app.file.UserInfoSerRepository;
 import ch.app.models.User;
 
-
 public class AccountAccessManager {
 
 	private Scanner input;
@@ -81,7 +80,6 @@ public class AccountAccessManager {
 		return null;
 	}
 
-	
 	/**
 	 * Checks whether given password matches hashed password
 	 * 
@@ -91,7 +89,6 @@ public class AccountAccessManager {
 		PassManager pwManager = new PassManager();
 		System.out.print("Enter Password: ");
 		return pwManager.validatePassword(input.nextLine(), userProfile.getPassword());
-
 	}
 
 }

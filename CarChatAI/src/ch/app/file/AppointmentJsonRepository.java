@@ -92,16 +92,17 @@ public class AppointmentJsonRepository implements AppointmentRepository {
 				profiles = mapper.readValue(file, new TypeReference<HashMap<UUID, List<Appointment>>>() {
 				});
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		return profiles;
 	}
 
+	/**
+	 * Remove Appointment in specified index
+	 */
 	@Override
 	public void remove(UUID userID, int index) {
-		// TODO Auto-generated method stub
 		File file = new File(FILE_NAME);
 		Map<UUID, List<Appointment>> profiles = new HashMap<>();
 		try {
@@ -117,9 +118,11 @@ public class AppointmentJsonRepository implements AppointmentRepository {
 		}
 	}
 
+	/**
+	 * Update Appointment information for appointment in specified index
+	 */
 	@Override
 	public void update(UUID userID, int index, Appointment app) {
-		// TODO Auto-generated method stub
 		File file = new File(FILE_NAME);
 		Map<UUID, List<Appointment>> profiles = new HashMap<>();
 		try {
@@ -134,8 +137,5 @@ public class AppointmentJsonRepository implements AppointmentRepository {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
 
 }

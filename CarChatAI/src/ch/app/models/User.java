@@ -13,12 +13,11 @@ public class User implements Serializable {
 	private String password;
 	private String age;
 
-	
 	/**
-	 * @param first First name of user
-	 * @param last Last name of user
-	 * @param pw User password
-	 * @param userAge Age of user
+	 * @param first    First name of user
+	 * @param last     Last name of user
+	 * @param pw       User password
+	 * @param userAge  Age of user
 	 * @param username Username of user
 	 */
 	public User(String first, String last, String pw, String userAge, String username) {
@@ -29,14 +28,14 @@ public class User implements Serializable {
 		this.age = userAge;
 		this.username = username;
 	}
-	
+
 	/**
 	 * 
 	 */
 	public User() {
 		this(null, null, null, null, null);
 	}
-	
+
 	/**
 	 * @return id user ID
 	 */
@@ -55,8 +54,7 @@ public class User implements Serializable {
 	 * @return fullname Users first and last name
 	 */
 	public String getFullName() {
-		String fullname = String.join(" ", this.firstName, this.lastName);
-		return fullname;
+		return String.join(" ", this.firstName, this.lastName);
 	}
 
 	/**
@@ -67,7 +65,7 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * @param firstName 
+	 * @param firstName
 	 */
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
@@ -116,7 +114,7 @@ public class User implements Serializable {
 	}
 
 	/**
-	 * @param password 
+	 * @param password
 	 */
 	public void setPassword(String password) {
 		this.password = password;

@@ -33,33 +33,19 @@ public class InfoRecorder {
 	 * @return username User created username
 	 */
 	private String recordUsername() {
-		// TODO Create username pattern
-		String usernamePat = "^(?=.{8,20}$)[a-zA-Z0-9._]+$";
-		UserInfoRepository userRepo = new UserInfoSerRepository();
-		List<User> userList = userRepo.load();
 		String username = null;
+		boolean match = false;
 		boolean valid = false;
 		boolean duplicate = false;
-		System.out.println("Please enter a username");
+		System.out.print("Please enter a username:");
 		while (!valid) {
-			duplicate = false;
 			username = input.nextLine();
-			if(!username.matches(usernamePat)) {
-				System.out.println("username must be between 8-20 characters");
-				continue;
-			}
-			for (User user : userList) {
-				if (user.getUsername().equalsIgnoreCase(username)) {
-					System.out.println("Username already in use, please try again.");
-					duplicate = true;
-					break;
-				}
-			}
-			if (!duplicate && username.matches(usernamePat)) {
-				valid = true;
-			}
+			match = isValidUsername(username);
+			duplicate = isDuplicateUsername(username);
+			valid = !duplicate && match;
 		}
 		return username;
+
 	}
 
 	/**
@@ -103,4 +89,36 @@ public class InfoRecorder {
 		return String.valueOf(age);
 	}
 
+	/**
+	 * Check for duplicate username in file
+	 * 
+	 * @param username user provided username
+	 * @return true if username is already in use, false other
+	 */
+	private boolean isDuplicateUsername(String username) {
+		UserInfoRepository userRepo = new UserInfoSerRepository();
+		List<User> userList = userRepo.load();
+		for (User user : userList) {
+			if (user.getUsername().equalsIgnoreCase(username)) {
+				System.out.println("Username already in use, please try again.");
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Check if username matches username pattern
+	 * 
+	 * @param username username to check
+	 * @return true if matches pattern, false otherwise
+	 */
+	private boolean isValidUsername(String username) {
+		String usernamePat = "^(?=.{8,20}$)[a-zA-Z0-9._]+$";
+		if (!username.matches(usernamePat)) {
+			System.out.println("username must be between 8-20 characters");
+			return false;
+		}
+		return true;
+	}
 }

@@ -19,15 +19,15 @@ public class WordXlsRepository implements WordRepository {
 	 */
 	@Override
 	public Map<String, Integer> load() {
-		Map<String,Integer> wordList = new HashMap<>();
+		Map<String, Integer> wordList = new HashMap<>();
 		File file = new File(FILE_NAME);
 		POIFSFileSystem fs;
 		try {
 			fs = new POIFSFileSystem(new FileInputStream(file));
 			HSSFWorkbook wb = new HSSFWorkbook(fs);
-			HSSFSheet sheet = wb.getSheetAt(0);			
+			HSSFSheet sheet = wb.getSheetAt(0);
 			int rows = sheet.getPhysicalNumberOfRows();
-			for(int i=0;i<rows;i++) {
+			for (int i = 0; i < rows; i++) {
 				String word = sheet.getRow(i).getCell(0).getStringCellValue();
 				int severity = (int) sheet.getRow(i).getCell(1).getNumericCellValue();
 				wordList.put(word, severity);

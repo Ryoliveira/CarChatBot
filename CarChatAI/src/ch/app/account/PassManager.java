@@ -21,23 +21,30 @@ public class PassManager {
 		return BCrypt.hashpw(password, BCrypt.gensalt(12));
 	}
 
+	/**
+	 * Create user password using password pattern
+	 * 
+	 * @return password user created password
+	 */
 	private String getPassword() {
-		// Password must be between 8 and 16 digits and include at least one digit.
-		String passwordPat = "^(?=.*\\d).{8,16}$";
 		boolean valid = false;
 		String password = "";
 		while (!valid) {
 			System.out.print("Please enter a password: ");
 			password = input.nextLine();
-			if (password.matches(passwordPat)) {
-				valid = true;
-			} else {
+			valid = isValid(password);
+			if (!valid) {
 				System.out.println("Password must be between 8-16 characters. Try Again.");
 			}
 		}
 		return password;
 	}
 
+	/**
+	 * Have user retype password and match
+	 * 
+	 * @param true is retyped password matches original, false otherwise
+	 */
 	private void retypePassword(String password) {
 		boolean match = false;
 		String retypedPass = "";
@@ -50,6 +57,18 @@ public class PassManager {
 				System.out.println("Passwords did not match, try again.");
 			}
 		}
+	}
+
+	/**
+	 * Check if password matches password pattern
+	 * 
+	 * @param password User provided password
+	 * @return true if password matches patter, false otherwise
+	 */
+	private boolean isValid(String password) {
+		// Password must be between 8 and 16 digits and include at least one digit.
+		String passwordPat = "^(?=.*\\d).{8,16}$";
+		return password.matches(passwordPat);
 	}
 
 	/**

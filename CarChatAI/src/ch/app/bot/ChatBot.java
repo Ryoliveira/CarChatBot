@@ -40,7 +40,7 @@ public class ChatBot {
 			ans = msgAnalyzer.checkForInsult(input.nextLine());
 			if (ans.equalsIgnoreCase("Y")) {
 				currentUser = accountM.createProfile();
-			}else {
+			} else {
 				System.out.println("Good-Bye!");
 				System.exit(0);
 			}
@@ -61,7 +61,7 @@ public class ChatBot {
 	 * Detect chat topic from user
 	 */
 	private void getChatTopic() {
-		System.out.println("How may I assist you?");
+		System.out.println("How may I assist you?(Ex. \"I got into an accident\", \"I need help with a rental\")");
 		String message = msgAnalyzer.checkForInsult(input.nextLine());
 		String situation = msgAnalyzer.detectSituation(message);
 		if (situation.equals("trouble")) {
@@ -73,9 +73,9 @@ public class ChatBot {
 		}
 		System.out.println("Is there anything else I can help you with? (Y/N)");
 		message = msgAnalyzer.checkForInsult(input.nextLine());
-		if(message.equalsIgnoreCase("Y")) {
+		if (message.equalsIgnoreCase("Y")) {
 			getChatTopic();
-		}else {
+		} else {
 			System.out.println("Good-Bye!");
 			System.out.println("You have been disconnected from chat.");
 		}
@@ -116,14 +116,13 @@ public class ChatBot {
 		String userMessage = msgAnalyzer.checkForInsult(input.nextLine());
 		if (msgAnalyzer.detectConfirmation(userMessage)) {
 			appManager.setUpAppointment();
-		}else if(userApps.size() > 0){
+		} else if (userApps.size() > 0) {
 			System.out.println("Would you like to view/Edit existing appointment?");
 			userMessage = msgAnalyzer.checkForInsult(input.nextLine());
-			if(msgAnalyzer.detectConfirmation(userMessage)) {
+			if (msgAnalyzer.detectConfirmation(userMessage)) {
 				appManager.modifyAppointment();
 			}
 		}
-
 	}
 
 }

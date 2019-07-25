@@ -6,5 +6,6 @@ import ch.app.models.CarInfo;
 
 public interface InventoryRepository {
 	void save(List<CarInfo> cars);
+
 	List<CarInfo> load();
 }

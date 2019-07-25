@@ -12,9 +12,9 @@ public class Appointment {
 	CarInfo carDetail;
 
 	/**
-	 * @param appDate Date of appointment
-	 * @param appTime Time of appointment
-	 * @param userId Users ID for appointment storage
+	 * @param appDate    Date of appointment
+	 * @param appTime    Time of appointment
+	 * @param userId     Users ID for appointment storage
 	 * @param carDetails Info of vehicle
 	 */
 	@JsonCreator
@@ -81,16 +81,15 @@ public class Appointment {
 	public void setCarDetail(CarInfo carDetail) {
 		this.carDetail = carDetail;
 	}
-	
+
 	/**
 	 * @return formmatedString Car info in formatted string
 	 */
 	@Override
 	public String toString() {
 		String[] date = this.getDate().split(":");
-		String formattedString = "Date: " + date[1]
-								+"\nTime: " + this.getTime()
-								+"\nCar: " + this.getCarDetail().getMake() + " " + this.getCarDetail().getModel();
+		String formattedString = "Date: " + date[1] + "\nTime: " + this.getTime() + "\nCar: "
+				+ this.getCarDetail().getMake() + " " + this.getCarDetail().getModel();
 		return formattedString;
 	}
 

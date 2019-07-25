@@ -8,16 +8,14 @@ import java.util.Scanner;
 import ch.app.file.WordRepository;
 import ch.app.file.WordXlsRepository;
 
-
-
 public class MessageAnalyzer {
-	
+
 	final private Scanner input = new Scanner(System.in);
 	final private List<String> confirmKW = Arrays.asList("yes", "yup", "ok", "fine", "okay", "yeah", "yea");
 	final private List<String> troubleKW = Arrays.asList("broken", "broke", "down", "trouble", "wont", "accident");
-	final private  List<String> rentalKW =  Arrays.asList("shop", "repaired", "rental", "rent", "appointment");
-	
-	private enum Severity{
+	final private List<String> rentalKW = Arrays.asList("shop", "repaired", "rental", "rent", "appointment");
+
+	private enum Severity {
 		MILD, MODERATE, SEVERE
 	}
 
@@ -37,7 +35,7 @@ public class MessageAnalyzer {
 		int severity = getSeverity(message);
 		if (severity == Severity.valueOf("MILD").ordinal() || severity == Severity.valueOf("MODERATE").ordinal()) {
 			message = insultWarning();
-		} else if(severity == Severity.valueOf("SEVERE").ordinal()){
+		} else if (severity == Severity.valueOf("SEVERE").ordinal()) {
 			severeCase();
 		}
 		return message;
@@ -72,7 +70,7 @@ public class MessageAnalyzer {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * @param message
 	 * @return
@@ -90,7 +88,7 @@ public class MessageAnalyzer {
 		}
 		return severity;
 	}
-	
+
 	/**
 	 * Gives user minor warning then gets new input
 	 * 
@@ -100,7 +98,7 @@ public class MessageAnalyzer {
 		System.out.println("please refrain from using such language. Thank you.");
 		return checkForInsult(input.nextLine());
 	}
-	
+
 	/**
 	 * Disconnects user from chat while delivering exit message.
 	 */

@@ -46,6 +46,11 @@ public class AppointmentManager {
 		}
 	}
 
+	/**
+	 * Return list of all user specific appointments
+	 * 
+	 * @return List of user appointments
+	 */
 	private List<Appointment> getUserAppointments() {
 		return appRepo.load(userID);
 	}
@@ -289,7 +294,6 @@ public class AppointmentManager {
 		System.out.println(newApp);
 	}
 
-	
 	/**
 	 * Let user choose to remove or edit an existing appointment
 	 */
@@ -302,9 +306,9 @@ public class AppointmentManager {
 				displayUserAppointments();
 			} else if (userChoice == 2) {
 				editAppointment();
-			}else if(userChoice == 3){
+			} else if (userChoice == 3) {
 				removeAppointment();
-			}else if (userChoice == 4) {
+			} else if (userChoice == 4) {
 				return;
 			} else {
 				throw new ArrayIndexOutOfBoundsException();
@@ -329,7 +333,7 @@ public class AppointmentManager {
 			try {
 				userChoice = Integer.parseInt(msgAnalyzer.checkForInsult(input.nextLine())) - 1;
 				editedApp = editFields(userApps.get(userChoice));
-			} catch (InputMismatchException |IndexOutOfBoundsException e) {
+			} catch (InputMismatchException | IndexOutOfBoundsException e) {
 				System.out.println("Please enter a number between 1-" + userApps.size());
 				continue;
 			}
@@ -342,7 +346,6 @@ public class AppointmentManager {
 		}
 	}
 
-	
 	/**
 	 * Let user choose which field to edit
 	 * 
@@ -353,27 +356,30 @@ public class AppointmentManager {
 		int userChoice = -1;
 		boolean finished = false;
 		while (!finished) {
-			System.out.println("Select one of the following "
-					+ "\n1)Date of appointment \n2)Time of appointment \n3)Car to view");
+			System.out.println(
+					"Select one of the following " + "\n1)Date of appointment \n2)Time of appointment \n3)Car to view");
 			try {
 				userChoice = Integer.parseInt(msgAnalyzer.checkForInsult(input.nextLine()));
-				if(userChoice < 1 || userChoice > 3) throw new IndexOutOfBoundsException();
-			}catch (InputMismatchException | IndexOutOfBoundsException e) {
+				if (userChoice < 1 || userChoice > 3)
+					throw new IndexOutOfBoundsException();
+			} catch (InputMismatchException | IndexOutOfBoundsException e) {
 				System.out.println("Please enter a number between 1-3");
 				continue;
 			}
-			if(userChoice == 1) app.setDate(selectDay());
-			else if(userChoice == 2) app.setTime(selectTime());
-			else if(userChoice == 3) app.setCarDetail(selectCar());
+			if (userChoice == 1)
+				app.setDate(selectDay());
+			else if (userChoice == 2)
+				app.setTime(selectTime());
+			else if (userChoice == 3)
+				app.setCarDetail(selectCar());
 			System.out.println("Change another field?(Y/N)");
-			if(!msgAnalyzer.checkForInsult(input.nextLine()).equalsIgnoreCase("Y")) {
+			if (!msgAnalyzer.checkForInsult(input.nextLine()).equalsIgnoreCase("Y")) {
 				finished = true;
 			}
 		}
 		return app;
 	}
-	
-	
+
 	/**
 	 * Let user choose which Appointment to remove
 	 */

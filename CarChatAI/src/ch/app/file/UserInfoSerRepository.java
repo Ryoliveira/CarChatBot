@@ -19,7 +19,7 @@ public class UserInfoSerRepository implements UserInfoRepository {
 		try {
 			FileOutputStream fos = new FileOutputStream(FILE_NAME);
 			ObjectOutputStream outputFile = new ObjectOutputStream(fos);
-			for(User user : users) {
+			for (User user : users) {
 				outputFile.writeObject(user);
 			}
 			outputFile.flush();
@@ -27,7 +27,7 @@ public class UserInfoSerRepository implements UserInfoRepository {
 		} catch (IOException e) {
 			e.getMessage();
 		}
-		
+
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class UserInfoSerRepository implements UserInfoRepository {
 			FileInputStream inputStream = new FileInputStream(FILE_NAME);
 			ObjectInputStream objectInputFile = new ObjectInputStream(inputStream);
 			User loadedUser;
-			while((loadedUser = (User) objectInputFile.readObject()) != null) {
+			while ((loadedUser = (User) objectInputFile.readObject()) != null) {
 				userList.add(loadedUser);
 			}
 			objectInputFile.close();
@@ -51,11 +51,11 @@ public class UserInfoSerRepository implements UserInfoRepository {
 		}
 		return userList;
 	}
-	
+
 	/**
-	 *Adds new user to user list file
+	 * Adds new user to user list file
 	 *
-	 *@param newUser user to be added
+	 * @param newUser user to be added
 	 *
 	 */
 	@Override
