@@ -8,12 +8,10 @@ import java.util.Scanner;
 import ch.app.file.WordRepository;
 import ch.app.file.WordXlsRepository;
 
+
 public class MessageAnalyzer {
 
 	final private Scanner input = new Scanner(System.in);
-	final private List<String> confirmKW = Arrays.asList("yes", "yup", "ok", "fine", "okay", "yeah", "yea");
-	final private List<String> troubleKW = Arrays.asList("broken", "broke", "down", "trouble", "wont", "accident");
-	final private List<String> rentalKW = Arrays.asList("shop", "repaired", "rental", "rent", "appointment");
 
 	private enum Severity {
 		MILD, MODERATE, SEVERE
@@ -48,9 +46,9 @@ public class MessageAnalyzer {
 	public String detectSituation(String message) {
 		List<String> words = splitMessage(message);
 		for (String word : words) {
-			if (troubleKW.contains(word)) {
+			if (Constants.TROUBLE_KW.contains(word)) {
 				return "trouble";
-			} else if (rentalKW.contains(word)) {
+			} else if (Constants.RENTAL_KW.contains(word)) {
 				return "rental";
 			}
 		}
@@ -64,7 +62,7 @@ public class MessageAnalyzer {
 	public boolean detectConfirmation(String message) {
 		List<String> words = splitMessage(message);
 		for (String word : words) {
-			if (confirmKW.contains(word)) {
+			if (Constants.CONFIRM_KW.contains(word.toLowerCase())) {
 				return true;
 			}
 		}
