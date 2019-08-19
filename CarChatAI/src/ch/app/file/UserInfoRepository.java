@@ -5,9 +5,9 @@ import java.util.List;
 import ch.app.models.User;
 
 public interface UserInfoRepository {
-	void save(List<User> users);
+	void saveUsers(List<User> users);
 
-	List<User> load();
+	List<User> loadUsers();
 
 	void addUser(User newUser);
 }

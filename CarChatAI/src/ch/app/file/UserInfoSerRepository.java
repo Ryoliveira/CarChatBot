@@ -15,7 +15,7 @@ public class UserInfoSerRepository implements UserInfoRepository {
 	 * @param users List of users
 	 */
 	@Override
-	public void save(List<User> users) {
+	public void saveUsers(List<User> users) {
 		try {
 			FileOutputStream fos = new FileOutputStream(FILE_NAME);
 			ObjectOutputStream outputFile = new ObjectOutputStream(fos);
@@ -36,7 +36,7 @@ public class UserInfoSerRepository implements UserInfoRepository {
 	 * @return userList List of users
 	 */
 	@Override
-	public List<User> load() {
+	public List<User> loadUsers() {
 		List<User> userList = new ArrayList<>();
 		try {
 			FileInputStream inputStream = new FileInputStream(FILE_NAME);
@@ -60,9 +60,9 @@ public class UserInfoSerRepository implements UserInfoRepository {
 	 */
 	@Override
 	public void addUser(User newUser) {
-		List<User> userList = load();
+		List<User> userList = loadUsers();
 		userList.add(newUser);
-		save(userList);
+		saveUsers(userList);
 	}
 
 }

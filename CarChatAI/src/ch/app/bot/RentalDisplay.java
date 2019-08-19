@@ -14,18 +14,17 @@ import ch.app.file.InventoryRepository;
 import ch.app.models.Appointment;
 import ch.app.models.CarInfo;
 
-public class AppointmentDisplay {
+public class RentalDisplay {
 	
 	private UUID userId;
 	private AppointmentRepository appRepo;
 	private List<Appointment> appointmentList;
 	
-	
-	
-	public AppointmentDisplay(UUID userId) {
+
+	public RentalDisplay(UUID userId) {
 		this.userId = userId; 
 		appRepo = new AppointmentJsonRepository();
-		appointmentList = appRepo.loadAppointments();
+		appointmentList = appRepo.loadAllAppointments();
 	}
 	
 	
@@ -47,7 +46,7 @@ public class AppointmentDisplay {
 	 * @return List of user appointments
 	 */
 	public List<Appointment> getUserAppointments() {
-		return appRepo.load(userId);
+		return appRepo.loadUser(userId);
 	}
 	
 	/**
@@ -58,7 +57,7 @@ public class AppointmentDisplay {
 	public List<CarInfo> getCarsInBudget(int budget) {
 		InventoryRepository carRepo = new CarInventoryRepository();
 		List<CarInfo> carsAvailable = new ArrayList<>();
-		List<CarInfo> carInv = carRepo.load();
+		List<CarInfo> carInv = carRepo.loadInventory();
 		for (CarInfo car : carInv) {
 			int carPrice = Integer.parseInt(car.getPrice());
 			if (carPrice <= budget) {

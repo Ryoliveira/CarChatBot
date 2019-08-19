@@ -2,8 +2,6 @@ package ch.app.bot;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.UUID;
-
 import ch.app.account.AccountAccessManager;
 import ch.app.file.AppointmentJsonRepository;
 import ch.app.file.AppointmentRepository;
@@ -11,74 +9,84 @@ import ch.app.models.Appointment;
 import ch.app.models.User;
 
 public class ChatBot {
-	
-	final private String[] ASSISTANCE_PROMPT = { "When did this happen?", "Where are you now?", "May we come assist you?" };
-	final private Scanner INPUT = new Scanner(System.in);
-	
-	private User userProfile;
+
+	private User profile;
 	private MessageAnalyzer msgAnalyzer;
+	private Scanner scanner;
+	private AccountAccessManager accessManager;
+	private AppointmentRepository appRepo;
+	private RentalService rentalService;
+
+	public ChatBot() {
+		scanner = new Scanner(System.in);
+		msgAnalyzer = new MessageAnalyzer();
+		accessManager = new AccountAccessManager();
+		appRepo = new AppointmentJsonRepository();
+	}
 
 	/**
 	 * Get user profile and begin conversation
 	 */
-	public void run() {
-		msgAnalyzer = new MessageAnalyzer();
-		userProfile = startUp();
-		greeting(userProfile.getFirstName());
-		getChatTopic();
+	public void runBot() {
+		getUserProfile();
+		greetUser();
+		handleSituation();
 	}
 
 	/**
+	 * Get or create user profile
+	 * 
 	 * @return User current user profile to be used in chat
 	 */
-	private User startUp() {
-		AccountAccessManager accountM = new AccountAccessManager();
+	private void getUserProfile() {
 		System.out.println("Hello, do you have an account with us? (Y/N)");
-		String ans = msgAnalyzer.checkForInsult(INPUT.nextLine());
-		User currentUser = new User();
-		if (ans.equalsIgnoreCase("Y")) {
-			currentUser = accountM.logIn();
+		String profileAnswer = msgAnalyzer.removeInsults(scanner.nextLine());
+		User user = new User();
+		if (profileAnswer.equalsIgnoreCase("Y")) {
+			user = accessManager.accessAccount();
 		} else {
 			System.out.println("\nWould you like to create a new profile? (Y/N)");
-			ans = msgAnalyzer.checkForInsult(INPUT.nextLine());
-			if (ans.equalsIgnoreCase("Y")) {
-				currentUser = accountM.createProfile();
+			String createUserAnswer = msgAnalyzer.removeInsults(scanner.nextLine());
+			if (createUserAnswer.equalsIgnoreCase("Y")) {
+				user = accessManager.createProfile();
 			} else {
-				disconnect();
+				disconnectUser();
 			}
 		}
-		return currentUser;
+		profile = user;
+		rentalService = new RentalService(profile.getId());
 	}
 
 	/**
 	 * Greet the user
-	 * 
-	 * @param name name of user
 	 */
-	private void greeting(String name) {
-		System.out.println("\nGreetings " + name + ", welcome to vehicle help live chat.");
+	private void greetUser() {
+		System.out.println("\nGreetings " + profile.getFirstName() + ", welcome to vehicle help live chat.");
 	}
 
 	/**
 	 * Detect chat topic from user
 	 */
-	private void getChatTopic() {
+	private void handleSituation() {
 		System.out.println("How may I assist you?(Ex. \"I got into an accident\", \"I need help with a rental\")");
-		String message = msgAnalyzer.checkForInsult(INPUT.nextLine());
-		String situation = msgAnalyzer.detectSituation(message);
-		if (situation.equals("trouble")) {
-			troubleSituation();
-		} else if (situation.equals("rental")) {
-			rentalSituation();
-		} else {
-			System.out.println("No problems?");
+		String message = msgAnalyzer.removeInsults(scanner.nextLine());
+		String situation = msgAnalyzer.getSituation(message);
+		switch (situation) {
+			case "trouble":
+				handleTroubleSituation();
+				break;
+			case "rental":
+				handleRentalSituation();
+				break;
+			default:
+				System.out.println("No problems?");
 		}
 		System.out.println("\nIs there anything else I can help you with? (Y/N)");
-		message = msgAnalyzer.checkForInsult(INPUT.nextLine());
+		message = msgAnalyzer.removeInsults(scanner.nextLine());
 		if (message.equalsIgnoreCase("Y")) {
-			getChatTopic();
+			handleSituation();
 		} else {
-			disconnect();
+			disconnectUser();
 		}
 	}
 
@@ -86,18 +94,17 @@ public class ChatBot {
 	 * Detect where and when trouble happened, assist user if requested. Otherwise
 	 * detect when to come assist user
 	 */
-	private void troubleSituation() {
-		
+	private void handleTroubleSituation() {
 		String userMessage = "";
-		for (int i = 0; i < ASSISTANCE_PROMPT.length; i++) {
-			System.out.println(ASSISTANCE_PROMPT[i]);
-			userMessage = msgAnalyzer.checkForInsult(INPUT.nextLine());
-			if (i == ASSISTANCE_PROMPT.length - 1) {
+		for (int i = 0; i < Constants.ASSISTANCE_PROMPT.length; i++) {
+			System.out.println(Constants.ASSISTANCE_PROMPT[i]);
+			userMessage = msgAnalyzer.removeInsults(scanner.nextLine());
+			if (i == Constants.ASSISTANCE_PROMPT.length - 1) {
 				if (msgAnalyzer.detectConfirmation(userMessage)) {
 					System.out.println("\nWe are on our way. Hang tight.");
 				} else {
 					System.out.println("\nWhen should we arrive?");
-					userMessage = msgAnalyzer.checkForInsult(INPUT.nextLine());
+					userMessage = msgAnalyzer.removeInsults(scanner.nextLine());
 					System.out.println("\nWe will see you then.");
 				}
 			}
@@ -108,28 +115,25 @@ public class ChatBot {
 	/**
 	 * Detect if user wants to make an appointment
 	 */
-	private void rentalSituation() {
-		UUID userID = userProfile.getId();
-		AppointmentRepository appRepo = new AppointmentJsonRepository();
-		List<Appointment> userApps = appRepo.load(userID);
-		AppointmentManager appManager = new AppointmentManager(userID);
+	private void handleRentalSituation() {
+		List<Appointment> userApps = appRepo.loadUser(profile.getId());
 		System.out.println("\nWould you like to set up an appointment?");
-		String userMessage = msgAnalyzer.checkForInsult(INPUT.nextLine());
+		String userMessage = msgAnalyzer.removeInsults(scanner.nextLine());
 		if (msgAnalyzer.detectConfirmation(userMessage)) {
-			appManager.setUpAppointment();
+			rentalService.setUpAppointment();
 		} else if (userApps.size() > 0) {
 			System.out.println("\nWould you like to view/Edit existing appointment?");
-			userMessage = msgAnalyzer.checkForInsult(INPUT.nextLine());
+			userMessage = msgAnalyzer.removeInsults(scanner.nextLine());
 			if (msgAnalyzer.detectConfirmation(userMessage)) {
-				appManager.modifyAppointment();
+				rentalService.selectAppointmentAction();
 			}
 		}
 	}
-	
+
 	/**
 	 * Disconnect user from chat
 	 */
-	public void disconnect() {
+	public void disconnectUser() {
 		System.out.println("\nGood-Bye!");
 		System.out.println("You have been disconnected from chat.");
 		System.exit(0);

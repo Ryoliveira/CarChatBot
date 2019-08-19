@@ -52,7 +52,7 @@ public class AppointmentJsonRepository implements AppointmentRepository {
 	 * @return List<Appointment> list of specific user appointments
 	 */
 	@Override
-	public List<Appointment> load(UUID userID) {
+	public List<Appointment> loadUser(UUID userID) {
 		HashMap<UUID, List<Appointment>> profiles = new HashMap<>();
 		File file = new File(FILE_NAME);
 		if (file.exists()) {
@@ -70,7 +70,7 @@ public class AppointmentJsonRepository implements AppointmentRepository {
 	 * @return appointments List of appointments across all users
 	 */
 	@Override
-	public List<Appointment> loadAppointments() {
+	public List<Appointment> loadAllAppointments() {
 		HashMap<UUID, List<Appointment>> profiles = getProfiles();
 		List<Appointment> appointments = new LinkedList<>();
 		for (Map.Entry<UUID, List<Appointment>> profile : profiles.entrySet()) {

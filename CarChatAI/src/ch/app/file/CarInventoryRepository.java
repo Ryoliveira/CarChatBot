@@ -20,7 +20,7 @@ public class CarInventoryRepository implements InventoryRepository {
 	 * @param cars List of cars to be saved
 	 */
 	@Override
-	public void save(List<CarInfo> cars) {
+	public void saveInventory(List<CarInfo> cars) {
 		try {
 			FileWriter fw = new FileWriter(new File(FILE_NAME));
 			for (CarInfo car : cars) {
@@ -39,7 +39,7 @@ public class CarInventoryRepository implements InventoryRepository {
 	 * @return carInventory current inventory of cars
 	 */
 	@Override
-	public List<CarInfo> load() {
+	public List<CarInfo> loadInventory() {
 		List<CarInfo> carInventory = new ArrayList<>();
 		File file = new File(FILE_NAME);
 		try {

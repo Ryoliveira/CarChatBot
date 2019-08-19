@@ -11,10 +11,14 @@ import ch.app.file.WordXlsRepository;
 
 public class MessageAnalyzer {
 
-	final private Scanner input = new Scanner(System.in);
-
 	private enum Severity {
 		MILD, MODERATE, SEVERE
+	}
+	
+	private Scanner scanner;
+	
+	public MessageAnalyzer() {
+		scanner = new Scanner(System.in);
 	}
 
 	/**
@@ -26,15 +30,17 @@ public class MessageAnalyzer {
 	}
 
 	/**
+	 * If insult is detected, warn user and prompt for new message
+	 * 
 	 * @param message User provided String
 	 * @return message String without any insults
 	 */
-	public String checkForInsult(String message) {
+	public String removeInsults(String message) {
 		int severity = getSeverity(message);
 		if (severity == Severity.valueOf("MILD").ordinal() || severity == Severity.valueOf("MODERATE").ordinal()) {
 			message = insultWarning();
 		} else if (severity == Severity.valueOf("SEVERE").ordinal()) {
-			severeCase();
+			handleSevereCase();
 		}
 		return message;
 	}
@@ -43,7 +49,7 @@ public class MessageAnalyzer {
 	 * @param message User provided String
 	 * @return type of situation that is detected
 	 */
-	public String detectSituation(String message) {
+	public String getSituation(String message) {
 		List<String> words = splitMessage(message);
 		for (String word : words) {
 			if (Constants.TROUBLE_KW.contains(word)) {
@@ -71,12 +77,12 @@ public class MessageAnalyzer {
 
 	/**
 	 * @param message
-	 * @return
+	 * @return severity level of insult severity
 	 */
 	private int getSeverity(String message) {
 		WordRepository wordRepo = new WordXlsRepository();
 		List<String> words = splitMessage(message);
-		Map<String, Integer> wordList = wordRepo.load();
+		Map<String, Integer> wordList = wordRepo.loadFile();
 		int severity = -1;
 		for (String word : words) {
 			if (wordList.containsKey(word)) {
@@ -94,13 +100,13 @@ public class MessageAnalyzer {
 	 */
 	private String insultWarning() {
 		System.out.println("please refrain from using such language. Thank you.");
-		return checkForInsult(input.nextLine());
+		return removeInsults(scanner.nextLine());
 	}
 
 	/**
 	 * Disconnects user from chat while delivering exit message.
 	 */
-	private void severeCase() {
+	private void handleSevereCase() {
 		System.out.println("This type of language will not be tolerated. Terminating chat!");
 		System.out.println("you have been disconnected from chat.");
 		System.exit(0);

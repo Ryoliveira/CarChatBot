@@ -37,8 +37,8 @@ public class InfoRecorder {
 		boolean match = false;
 		boolean valid = false;
 		boolean duplicate = false;
-		System.out.print("Please enter a username:");
 		while (!valid) {
+			System.out.print("Please enter a username:");
 			username = input.nextLine();
 			match = isValidUsername(username);
 			duplicate = isDuplicateUsername(username);
@@ -97,7 +97,7 @@ public class InfoRecorder {
 	 */
 	private boolean isDuplicateUsername(String username) {
 		UserInfoRepository userRepo = new UserInfoSerRepository();
-		List<User> userList = userRepo.load();
+		List<User> userList = userRepo.loadUsers();
 		for (User user : userList) {
 			if (user.getUsername().equalsIgnoreCase(username)) {
 				System.out.println("Username already in use, please try again.");

@@ -12,7 +12,7 @@ public interface AppointmentRepository {
 
 	void remove(UUID userId, int index);
 
-	List<Appointment> load(UUID creatorId);
+	List<Appointment> loadUser(UUID creatorId);
 
-	List<Appointment> loadAppointments();
+	List<Appointment> loadAllAppointments();
 }

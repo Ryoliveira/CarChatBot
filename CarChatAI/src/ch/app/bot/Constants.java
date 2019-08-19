@@ -16,5 +16,8 @@ public final class Constants {
 	//AppointmentManager Menu Constants
 	public static final List<String> EDIT_OPTIONS = Arrays.asList("Date of appointment", "Time of appointment", "Car to view");
 	public static final List<String> MODIFY_OPTIONS = Arrays.asList("View Appointment(s)", "Edit Appointment(s)", "Remove Appointment(s)", "Cancel");
+	
+	//ChatBot Prompt Constants
+	public static final String[] ASSISTANCE_PROMPT = { "When did this happen?", "Where are you now?", "May we come assist you?" };
 
 }

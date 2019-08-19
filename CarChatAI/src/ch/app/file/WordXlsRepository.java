@@ -18,7 +18,7 @@ public class WordXlsRepository implements WordRepository {
 	 * @return list of insult words with corresponding severity
 	 */
 	@Override
-	public Map<String, Integer> load() {
+	public Map<String, Integer> loadFile() {
 		Map<String, Integer> wordList = new HashMap<>();
 		File file = new File(FILE_NAME);
 		POIFSFileSystem fs;

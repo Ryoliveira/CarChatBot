@@ -32,9 +32,9 @@ public class PassManager {
 		while (!valid) {
 			System.out.print("Please enter a password: ");
 			password = input.nextLine();
-			valid = isValid(password);
+			valid = isValidPassword(password);
 			if (!valid) {
-				System.out.println("Password must be between 8-16 characters. Try Again.");
+				System.out.println("Password must be between 8-16 characters and include 1 digit. Try Again.");
 			}
 		}
 		return password;
@@ -65,7 +65,7 @@ public class PassManager {
 	 * @param password User provided password
 	 * @return true if password matches patter, false otherwise
 	 */
-	private boolean isValid(String password) {
+	private boolean isValidPassword(String password) {
 		// Password must be between 8 and 16 digits and include at least one digit.
 		String passwordPat = "^(?=.*\\d).{8,16}$";
 		return password.matches(passwordPat);

@@ -10,23 +10,21 @@ import ch.app.file.AppointmentRepository;
 import ch.app.models.Appointment;
 import ch.app.models.CarInfo;
 
-public class AppointmentManager {
-	
-	
-	private final Scanner INPUT = new Scanner(System.in);
-	
+public class RentalService {
 
 	private AppointmentRepository appRepo;
-	private AppointmentDisplay appDisplay;
+	private RentalDisplay appDisplay;
 	private MessageAnalyzer msgAnalyzer;
+	private Scanner scanner;
 	private UUID userID;
 	private String day;
 	private String time;
 	private CarInfo car;
 
-	public AppointmentManager(UUID userID) {
+	public RentalService(UUID userID) {
+		scanner = new Scanner(System.in);
 		appRepo = new AppointmentJsonRepository();
-		appDisplay = new AppointmentDisplay(userID);
+		appDisplay = new RentalDisplay(userID);
 		msgAnalyzer = new MessageAnalyzer();
 		this.userID = userID;
 	}
@@ -42,9 +40,10 @@ public class AppointmentManager {
 		while (!isValid) {
 			System.out.print("Enter rental budget: ");
 			try {
-				budget = Integer.parseInt(msgAnalyzer.checkForInsult(INPUT.nextLine()));
+				budget = Integer.parseInt(msgAnalyzer.removeInsults(scanner.nextLine()));
 				isValid = true;
-				if(budget < 0) throw new IllegalArgumentException();
+				if (budget < 0)
+					throw new IllegalArgumentException();
 			} catch (InputMismatchException | IllegalArgumentException e) {
 				System.out.println("Please enter a valid number above 0.");
 			}
@@ -107,21 +106,21 @@ public class AppointmentManager {
 	/**
 	 * Let user choose to remove or edit an existing appointment
 	 */
-	public void modifyAppointment() {
+	public void selectAppointmentAction() {
 		appDisplay.displayMenu(Constants.MODIFY_OPTIONS);
 		int userChoice = getChoice(Constants.MODIFY_OPTIONS.size(), "action", "continue");
 		switch (userChoice) {
-		case 0:
-			appDisplay.displayUserAppointments();
-			break;
-		case 1:
-			editAppointment();
-			break;
-		case 2:
-			removeAppointment();
-			break;
-		default:
-			return;
+			case 0:
+				appDisplay.displayUserAppointments();
+				break;
+			case 1:
+				editAppointment();
+				break;
+			case 2:
+				removeAppointment();
+				break;
+			default:
+				return;
 		}
 
 	}
@@ -136,7 +135,7 @@ public class AppointmentManager {
 		while (!isFinished) {
 			appDisplay.displayUserAppointments();
 			userChoice = getChoice(userApps.size(), "appointment", "edit");
-			Appointment editedApp = editFields(userApps.get(userChoice));
+			Appointment editedApp = editAppointmentFields(userApps.get(userChoice));
 			if (getConfirmation("Save Changes?(Y/N)")) {
 				appRepo.update(userID, userChoice, editedApp);
 				isFinished = true;
@@ -150,13 +149,13 @@ public class AppointmentManager {
 	 * @param app Appointment to edited
 	 * @return app edited Appointment
 	 */
-	private Appointment editFields(Appointment app) {
+	private Appointment editAppointmentFields(Appointment app) {
 		int userChoice = -1;
 		boolean isFinished = false;
 		while (!isFinished) {
 			appDisplay.displayMenu(Constants.EDIT_OPTIONS);
 			userChoice = getChoice(Constants.EDIT_OPTIONS.size(), "field", "edit");
-			switch(userChoice) {
+			switch (userChoice) {
 			case 0:
 				app.setDate(selectDay());
 				break;
@@ -190,14 +189,13 @@ public class AppointmentManager {
 			isFinished = !getConfirmation("Select another appointment to delete?(Y/N)");
 		}
 	}
-	
-	
+
 	/**
 	 * Get user choice from range 1 - # of choices
 	 * 
 	 * @param choices amount of choices
-	 * @param topic topic of choices
-	 * @param action action to be performed
+	 * @param topic   topic of choices
+	 * @param action  action to be performed
 	 * @return user choice as int
 	 */
 	private int getChoice(int choices, String topic, String action) {
@@ -206,7 +204,7 @@ public class AppointmentManager {
 		System.out.printf("\nSelect %s to %s:", topic, action);
 		while (!isValid) {
 			try {
-				userChoice = Integer.parseInt(msgAnalyzer.checkForInsult(INPUT.nextLine())) - 1;
+				userChoice = Integer.parseInt(msgAnalyzer.removeInsults(scanner.nextLine())) - 1;
 				if (userChoice < 0 || userChoice > choices - 1) {
 					throw new IndexOutOfBoundsException();
 				}
@@ -218,15 +216,16 @@ public class AppointmentManager {
 		}
 		return userChoice;
 	}
-	
+
 	/**
 	 * Print prompt to user and detect confirmation
+	 * 
 	 * @param prompt prompt to ask user
 	 * @return true if confirmation is detected, false otherwise
 	 */
 	public boolean getConfirmation(String prompt) {
 		System.out.println(prompt);
-		String userAnswer = msgAnalyzer.checkForInsult(INPUT.nextLine()); 
+		String userAnswer = msgAnalyzer.removeInsults(scanner.nextLine());
 		return msgAnalyzer.detectConfirmation(userAnswer);
 	}
 
